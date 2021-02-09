@@ -63,8 +63,16 @@ class Message extends BaseMessage implements MimeConvertible
         $headers->unset('From');
 
 
-        $message->setId(trim($headers->getValue('Message-ID'), '<>'));
-        $message->setDate(new \DateTime($headers->getValue('Date')));
+        try {
+          $message->setId(trim($headers->getValue('Message-ID'), '<>'));
+        }
+        catch (\Exception $e) {}
+
+        try {
+          $message->setDate(new \DateTime($headers->getValue('Date')));
+        }
+        catch (\Exception $e) {}
+
         if ($boundary = $this->getMimeBoundary($headers)) {
             $message->setBoundary($boundary);
         }
